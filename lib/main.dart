@@ -699,7 +699,6 @@ class ActionCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }
