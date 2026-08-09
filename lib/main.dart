@@ -1780,45 +1780,87 @@ class SpinEarnPage extends StatefulWidget {
   });
 
   @override
-  State<SpinEarnPage> createState() =>
-      _SpinEarnPageState();
+  State<SpinEarnPage> createState() => _SpinEarnPageState();
 }
 
-class _SpinEarnPageState
-    extends State<SpinEarnPage> {
+class _SpinEarnPageState extends State<SpinEarnPage>
+    with SingleTickerProviderStateMixin {
   final Random random = Random();
+
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   bool spinning = false;
   int reward = 0;
+  int selectedIndex = 0;
+
+  final List<int> rewards = [
+    10,
+    20,
+    30,
+    40,
+    50,
+    75,
+    100,
+    20,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 4500),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> spin() async {
     if (spinning) return;
 
     setState(() {
       spinning = true;
+      reward = 0;
     });
 
-    await Future.delayed(
-      const Duration(milliseconds: 1200),
+    final newIndex = random.nextInt(rewards.length);
+
+    // Multiple full rotations + random final position
+    final extraTurns = 5 + random.nextInt(4);
+
+    final segmentAngle = 1 / rewards.length;
+
+    final targetTurns =
+        extraTurns + (1 - newIndex * segmentAngle);
+
+    _animation = Tween<double>(
+      begin: 0,
+      end: targetTurns,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic,
+      ),
     );
 
-    final rewards = [
-      10,
-      20,
-      30,
-      50,
-      75,
-      100,
-    ];
+    _controller.reset();
 
-    final result =
-        rewards[random.nextInt(rewards.length)];
+    await _controller.forward();
 
     if (!mounted) return;
+
+    final result = rewards[newIndex];
 
     setState(() {
       spinning = false;
       reward = result;
+      selectedIndex = newIndex;
     });
 
     widget.onEarn(
@@ -1826,6 +1868,16 @@ class _SpinEarnPageState
       'Spin & Earn',
       Icons.casino,
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            '🎉 You won $result Coins!',
+          ),
+        ),
+      );
   }
 
   @override
@@ -1834,11 +1886,13 @@ class _SpinEarnPageState
       appBar: AppBar(
         title: const Text('Spin & Earn'),
       ),
-      body: Center(
+      body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(22),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
+              const SizedBox(height: 20),
+
               const Text(
                 'Spin & Earn',
                 style: TextStyle(
@@ -1847,59 +1901,102 @@ class _SpinEarnPageState
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
 
               const Text(
-                'Spin the wheel and win coins.',
+                'Spin the wheel and win coins!',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF6B7280),
+                  fontSize: 16,
                 ),
               ),
 
               const SizedBox(height: 35),
 
-              AnimatedRotation(
-                turns: spinning ? 3 : 0,
-                duration:
-                    const Duration(
-                  milliseconds: 1200,
-                ),
-                curve: Curves.easeOut,
-                child: Container(
-                  width: 210,
-                  height: 210,
-                  decoration:
-                      const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: SweepGradient(
-                      colors: [
-                        Color(0xFF16A34A),
-                        Color(0xFF86EFAC),
-                        Color(0xFF15803D),
-                        Color(0xFF22C55E),
-                        Color(0xFF16A34A),
-                      ],
+              Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18),
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) {
+                        final turns =
+                            _controller.isAnimating
+                                ? _animation.value
+                                : 0.0;
+
+                        return Transform.rotate(
+                          angle: turns * 2 * pi,
+                          child: child,
+                        );
+                      },
+                      child: Container(
+                        width: 300,
+                        height: 300,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x25000000),
+                              blurRadius: 20,
+                              offset: Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: CustomPaint(
+                          painter: RewardWheelPainter(
+                            rewards: rewards,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.casino,
-                      size: 80,
-                      color: Colors.white,
-                    ),
+
+                  // Pointer
+                  const Icon(
+                    Icons.arrow_drop_down,
+                    size: 55,
+                    color: Color(0xFFDC2626),
                   ),
-                ),
+                ],
               ),
 
               const SizedBox(height: 30),
 
               if (reward > 0)
-                Text(
-                  'You won $reward Coins!',
-                  style: const TextStyle(
-                    color: Color(0xFF16A34A),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE7F7EC),
+                    borderRadius:
+                        BorderRadius.circular(18),
+                    border: Border.all(
+                      color: const Color(0xFFB7DCC3),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Congratulations! 🎉',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF16A34A),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        '+$reward Coins',
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF15803D),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -1907,7 +2004,7 @@ class _SpinEarnPageState
 
               SizedBox(
                 width: double.infinity,
-                height: 54,
+                height: 56,
                 child: ElevatedButton.icon(
                   onPressed:
                       spinning ? null : spin,
@@ -1918,6 +2015,10 @@ class _SpinEarnPageState
                     spinning
                         ? 'Spinning...'
                         : 'SPIN NOW',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   style:
                       ElevatedButton.styleFrom(
@@ -1925,7 +2026,22 @@ class _SpinEarnPageState
                         const Color(0xFF16A34A),
                     foregroundColor:
                         Colors.white,
+                    shape:
+                        RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30),
+                    ),
                   ),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              const Text(
+                'Rewards are selected randomly.',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 12,
                 ),
               ),
             ],
@@ -1935,7 +2051,163 @@ class _SpinEarnPageState
     );
   }
 }
+class RewardWheelPainter extends CustomPainter {
+  final List<int> rewards;
 
+  RewardWheelPainter({
+    required this.rewards,
+  });
+
+  final List<Color> colors = const [
+    Color(0xFF16A34A),
+    Color(0xFF22C55E),
+    Color(0xFF15803D),
+    Color(0xFF4ADE80),
+    Color(0xFF16A34A),
+    Color(0xFF86EFAC),
+    Color(0xFF15803D),
+    Color(0xFF22C55E),
+  ];
+
+  @override
+  void paint(
+    Canvas canvas,
+    Size size,
+  ) {
+    final center = Offset(
+      size.width / 2,
+      size.height / 2,
+    );
+
+    final radius = size.width / 2;
+
+    final paint = Paint()
+      ..style = PaintingStyle.fill;
+
+    final segmentAngle =
+        (2 * pi) / rewards.length;
+
+    for (int i = 0;
+        i < rewards.length;
+        i++) {
+      paint.color =
+          colors[i % colors.length];
+
+      final startAngle =
+          -pi / 2 + i * segmentAngle;
+
+      canvas.drawArc(
+        Rect.fromCircle(
+          center: center,
+          radius: radius,
+        ),
+        startAngle,
+        segmentAngle,
+        true,
+        paint,
+      );
+
+      // Segment border
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2;
+
+      canvas.drawArc(
+        Rect.fromCircle(
+          center: center,
+          radius: radius,
+        ),
+        startAngle,
+        segmentAngle,
+        true,
+        borderPaint,
+      );
+
+      // Reward text
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: '${rewards[i]}',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+
+      textPainter.layout();
+
+      final textAngle =
+          startAngle + segmentAngle / 2;
+
+      final textRadius = radius * 0.67;
+
+      final textX =
+          center.dx +
+          cos(textAngle) * textRadius -
+          textPainter.width / 2;
+
+      final textY =
+          center.dy +
+          sin(textAngle) * textRadius -
+          textPainter.height / 2;
+
+      textPainter.paint(
+        canvas,
+        Offset(textX, textY),
+      );
+    }
+
+    // Center circle
+    paint.color = Colors.white;
+
+    canvas.drawCircle(
+      center,
+      35,
+      paint,
+    );
+
+    final centerPaint = Paint()
+      ..color = const Color(0xFF16A34A);
+
+    canvas.drawCircle(
+      center,
+      28,
+      centerPaint,
+    );
+
+    final iconPainter = TextPainter(
+      text: const TextSpan(
+        text: '★',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+
+    iconPainter.layout();
+
+    iconPainter.paint(
+      canvas,
+      Offset(
+        center.dx - iconPainter.width / 2,
+        center.dy - iconPainter.height / 2,
+      ),
+    );
+  }
+
+  @override
+  bool shouldRepaint(
+    covariant RewardWheelPainter oldDelegate,
+  ) {
+    return oldDelegate.rewards != rewards;
+  }
+}
 // ============================================================
 // THEME PAGE
 // ============================================================
