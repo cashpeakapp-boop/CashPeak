@@ -19,27 +19,57 @@ class CashPeakApp extends StatefulWidget {
 }
 
 class _CashPeakAppState extends State<CashPeakApp> {
-  ThemeMode themeMode = ThemeMode.dark;
+  ThemeMode themeMode = ThemeMode.light;
 
   ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF080B0D),
+      scaffoldBackgroundColor: const Color(0xFFF5F7F6),
       colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFFFFB600),
+        seedColor: const Color(0xFF16A34A),
         brightness: Brightness.dark,
       ),
     );
   }
 
   ThemeData get lightTheme {
+    const green = Color(0xFF16A34A);
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      scaffoldBackgroundColor: const Color(0xFFF5F7F6),
       colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFFFFB600),
+        seedColor: green,
         brightness: Brightness.light,
+        surface: Colors.white,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFFF5F7F6),
+        foregroundColor: Color(0xFF111827),
+        elevation: 0,
+        centerTitle: true,
+      ),
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(18)),
+          side: BorderSide(color: Color(0xFFE2E8E5)),
+        ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: Colors.white,
+        elevation: 8,
+        indicatorColor: Color(0xFFE7F7EC),
+        labelTextStyle: WidgetStatePropertyAll(
+          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        ),
+      ),
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Color(0xFF166534),
       ),
     );
   }
@@ -107,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF050607),
+      backgroundColor: const Color(0xFFF8FAF9),
       body: Center(
         child: Image.asset(
           'assets/cashpeak_logo.png',
@@ -116,7 +146,7 @@ class _SplashScreenState extends State<SplashScreen> {
             return const Icon(
               Icons.monetization_on,
               size: 100,
-              color: Color(0xFFFFB600),
+              color: Color(0xFF16A34A),
             );
           },
         ),
@@ -210,7 +240,7 @@ class _MainShellState extends State<MainShell> {
   void withdrawCoins(int amount) {
     if (amount < 10000) {
       showMessage(
-        'Minimum withdrawal is 10,000 Coins (₹100).',
+        'Minimum withdrawal is 10,000 Coins (鈧�100).',
       );
       return;
     }
@@ -370,7 +400,7 @@ class HomePage extends StatelessWidget {
                     return const Icon(
                       Icons.monetization_on,
                       size: 50,
-                      color: Color(0xFFFFB600),
+                      color: Color(0xFF16A34A),
                     );
                   },
                 ),
@@ -390,7 +420,7 @@ class HomePage extends StatelessWidget {
                       Text(
                         'Earn More. Reach The Peak.',
                         style: TextStyle(
-                          color: Color(0xFFFFB600),
+                          color: Color(0xFF16A34A),
                           fontSize: 12,
                         ),
                       ),
@@ -494,14 +524,14 @@ class HomePage extends StatelessWidget {
 
             const InfoCard(
               icon: Icons.monetization_on_outlined,
-              text: '100 Coins = ₹1',
+              text: '100 Coins = 鈧�1',
             ),
 
             const SizedBox(height: 10),
 
             const InfoCard(
               icon: Icons.account_balance_wallet_outlined,
-              text: 'Minimum withdrawal = ₹100',
+              text: 'Minimum withdrawal = 鈧�100',
             ),
 
             const SizedBox(height: 28),
@@ -562,13 +592,14 @@ class BalanceCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
-            Color(0xFF1C3200),
-            Color(0xFF101A08),
+            Color(0xFFE7F7EC),
+            Color(0xFFE8F7EC),
           ],
         ),
         borderRadius: BorderRadius.circular(22),
+        boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 18, offset: Offset(0, 7))],
         border: Border.all(
-          color: const Color(0xFFB88600),
+          color: const Color(0xFFB7DCC3),
         ),
       ),
       child: Column(
@@ -578,7 +609,7 @@ class BalanceCard extends StatelessWidget {
           const Text(
             'Your Coins',
             style: TextStyle(
-              color: Color(0xFFD0D0D0),
+              color: Color(0xFF64748B),
               fontSize: 16,
             ),
           ),
@@ -586,7 +617,7 @@ class BalanceCard extends StatelessWidget {
           const Text(
             'Coins Balance',
             style: TextStyle(
-              color: Color(0xFFFFB600),
+              color: Color(0xFF16A34A),
               fontSize: 34,
               fontWeight: FontWeight.bold,
             ),
@@ -600,10 +631,10 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '≈ ₹${rupees.toStringAsFixed(2)}',
+            '鈮� 鈧�${rupees.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 18,
-              color: Color(0xFFFFD75A),
+              color: Color(0xFF22C55E),
             ),
           ),
         ],
@@ -633,8 +664,9 @@ class ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: const Color(0xFF151A1D),
+      color: const Color(0xFFFFFFFF),
       borderRadius: BorderRadius.circular(18),
+      boxShadow: const [BoxShadow(color: Color(0x10000000), blurRadius: 14, offset: Offset(0, 5))],
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(18),
@@ -646,7 +678,7 @@ class ActionCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: const Color(0xFF30363A),
+              color: const Color(0xFFE1E7E3),
             ),
           ),
           child: Row(
@@ -655,7 +687,7 @@ class ActionCard extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: const Color(0xFFFFB600),
+                color: const Color(0xFF16A34A),
                 size: 28,
               ),
               const SizedBox(width: 10),
@@ -696,14 +728,14 @@ class InfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: const Color(0xFF121619),
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         children: [
           Icon(
             icon,
-            color: const Color(0xFFFFB600),
+            color: const Color(0xFF16A34A),
           ),
           const SizedBox(width: 12),
           Text(text),
@@ -734,10 +766,10 @@ class ActivityTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
-        backgroundColor: const Color(0xFF252A1A),
+        backgroundColor: const Color(0xFFEAF7EE),
         child: Icon(
           icon,
-          color: const Color(0xFFFFB600),
+          color: const Color(0xFF16A34A),
         ),
       ),
       title: Text(title),
@@ -780,7 +812,7 @@ class EarnPage extends StatelessWidget {
             const Text(
               'Complete simple tasks and earn rewards.',
               style: TextStyle(
-                color: Color(0xFFB0B0B0),
+                color: Color(0xFF6B7280),
               ),
             ),
 
@@ -923,10 +955,10 @@ class EarnTaskCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFF13181B),
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFF2B3135),
+          color: const Color(0xFFE2E8E5),
         ),
       ),
       child: Row(
@@ -935,13 +967,13 @@ class EarnTaskCard extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: const Color(0xFF272A12),
+              color: const Color(0xFFF0FDF4),
               borderRadius:
                   BorderRadius.circular(14),
             ),
             child: Icon(
               icon,
-              color: const Color(0xFFFFB600),
+              color: const Color(0xFF16A34A),
               size: 28,
             ),
           ),
@@ -964,7 +996,7 @@ class EarnTaskCard extends StatelessWidget {
                 Text(
                   description,
                   style: const TextStyle(
-                    color: Color(0xFF9B9B9B),
+                    color: Color(0xFF6B7280),
                     fontSize: 12,
                   ),
                 ),
@@ -972,7 +1004,7 @@ class EarnTaskCard extends StatelessWidget {
                 Text(
                   reward,
                   style: const TextStyle(
-                    color: Color(0xFFFFB600),
+                    color: Color(0xFF16A34A),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -986,8 +1018,8 @@ class EarnTaskCard extends StatelessWidget {
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
               backgroundColor:
-                  const Color(0xFFFFB600),
-              foregroundColor: Colors.black,
+                  const Color(0xFF16A34A),
+              foregroundColor: Colors.white,
             ),
             child: const Text('Open'),
           ),
@@ -1105,8 +1137,8 @@ class WalletPage extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      const Color(0xFFFFB600),
-                  foregroundColor: Colors.black,
+                      const Color(0xFF16A34A),
+                  foregroundColor: Colors.white,
                 ),
               ),
             ),
@@ -1117,7 +1149,7 @@ class WalletPage extends StatelessWidget {
               child: Text(
                 'Minimum 10000 Coins',
                 style: TextStyle(
-                  color: Color(0xFF9B9B9B),
+                  color: Color(0xFF6B7280),
                   fontSize: 12,
                 ),
               ),
@@ -1167,13 +1199,13 @@ class TransactionTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
         backgroundColor: positive
-            ? const Color(0xFF203015)
-            : const Color(0xFF301515),
+            ? const Color(0xFFE5F5EA)
+            : const Color(0xFFFDECEC),
         child: Icon(
           item.icon,
           color: positive
-              ? const Color(0xFFB7E85C)
-              : const Color(0xFFFF6B6B),
+              ? const Color(0xFF86EFAC)
+              : const Color(0xFFDC2626),
         ),
       ),
       title: Text(item.title),
@@ -1181,8 +1213,8 @@ class TransactionTile extends StatelessWidget {
         '${positive ? '+' : ''}${item.coins}',
         style: TextStyle(
           color: positive
-              ? const Color(0xFFB7E85C)
-              : const Color(0xFFFF6B6B),
+              ? const Color(0xFF86EFAC)
+              : const Color(0xFFDC2626),
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -1229,11 +1261,11 @@ class ProfilePage extends StatelessWidget {
 
             const CircleAvatar(
               radius: 48,
-              backgroundColor: Color(0xFF252A1A),
+              backgroundColor: Color(0xFFEAF7EE),
               child: Icon(
                 Icons.person,
                 size: 55,
-                color: Color(0xFFFFB600),
+                color: Color(0xFF16A34A),
               ),
             ),
 
@@ -1254,7 +1286,7 @@ class ProfilePage extends StatelessWidget {
                   ? 'Email not added'
                   : userEmail,
               style: const TextStyle(
-                color: Color(0xFF9B9B9B),
+                color: Color(0xFF6B7280),
               ),
             ),
 
@@ -1389,7 +1421,7 @@ class ProfilePage extends StatelessWidget {
                   applicationIcon:
                       const Icon(
                     Icons.monetization_on,
-                    color: Color(0xFFFFB600),
+                    color: Color(0xFF16A34A),
                   ),
                   children: const [
                     Text(
@@ -1562,15 +1594,15 @@ class ProfileOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFF13181B),
+      color: const Color(0xFFFFFFFF),
       child: ListTile(
         onTap: onTap,
         leading: CircleAvatar(
           backgroundColor:
-              const Color(0xFF252A1A),
+              const Color(0xFFEAF7EE),
           child: Icon(
             icon,
-            color: const Color(0xFFFFB600),
+            color: const Color(0xFF16A34A),
           ),
         ),
         title: Text(
@@ -1615,7 +1647,7 @@ class ReferEarnPage extends StatelessWidget {
             const Icon(
               Icons.people,
               size: 90,
-              color: Color(0xFFFFB600),
+              color: Color(0xFF16A34A),
             ),
 
             const SizedBox(height: 20),
@@ -1634,7 +1666,7 @@ class ReferEarnPage extends StatelessWidget {
               'Invite your friends to CashPeak and earn bonus coins.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF9B9B9B),
+                color: Color(0xFF6B7280),
                 fontSize: 15,
               ),
             ),
@@ -1645,11 +1677,11 @@ class ReferEarnPage extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF13181B),
+                color: const Color(0xFFFFFFFF),
                 borderRadius:
                     BorderRadius.circular(18),
                 border: Border.all(
-                  color: const Color(0xFF30363A),
+                  color: const Color(0xFFE1E7E3),
                 ),
               ),
               child: const Column(
@@ -1657,14 +1689,14 @@ class ReferEarnPage extends StatelessWidget {
                   Text(
                     'Your Referral Code',
                     style: TextStyle(
-                      color: Color(0xFF9B9B9B),
+                      color: Color(0xFF6B7280),
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     'CASHPEAK100',
                     style: TextStyle(
-                      color: Color(0xFFFFB600),
+                      color: Color(0xFF16A34A),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                     ),
@@ -1701,8 +1733,8 @@ class ReferEarnPage extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      const Color(0xFFFFB600),
-                  foregroundColor: Colors.black,
+                      const Color(0xFF16A34A),
+                  foregroundColor: Colors.white,
                 ),
               ),
             ),
@@ -1798,7 +1830,7 @@ class _SpinEarnPageState
               const Text(
                 'Spin the wheel and win coins.',
                 style: TextStyle(
-                  color: Color(0xFF9B9B9B),
+                  color: Color(0xFF6B7280),
                 ),
               ),
 
@@ -1817,11 +1849,11 @@ class _SpinEarnPageState
                     gradient:
                         const SweepGradient(
                       colors: [
-                        Color(0xFFFFB600),
-                        Color(0xFFB7E85C),
-                        Color(0xFFFF8C00),
-                        Color(0xFFFFD75A),
-                        Color(0xFFFFB600),
+                        Color(0xFF16A34A),
+                        Color(0xFF86EFAC),
+                        Color(0xFF15803D),
+                        Color(0xFF22C55E),
+                        Color(0xFF16A34A),
                       ],
                     ),
                   ),
@@ -1829,7 +1861,7 @@ class _SpinEarnPageState
                     child: Icon(
                       Icons.casino,
                       size: 80,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -1841,7 +1873,7 @@ class _SpinEarnPageState
                 Text(
                   'You won $reward Coins!',
                   style: const TextStyle(
-                    color: Color(0xFFFFB600),
+                    color: Color(0xFF16A34A),
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1865,8 +1897,8 @@ class _SpinEarnPageState
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        const Color(0xFFFFB600),
-                    foregroundColor: Colors.black,
+                        const Color(0xFF16A34A),
+                    foregroundColor: Colors.white,
                   ),
                 ),
               ),
@@ -1946,10 +1978,10 @@ class ThemePage extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor:
-              const Color(0xFF252A1A),
+              const Color(0xFFEAF7EE),
           child: Icon(
             icon,
-            color: const Color(0xFFFFB600),
+            color: const Color(0xFF16A34A),
           ),
         ),
         title: Text(title),
@@ -1999,7 +2031,7 @@ class PrivacyPolicyPage extends StatelessWidget {
           Text(
             'Last updated: August 2026',
             style: TextStyle(
-              color: Color(0xFF9B9B9B),
+              color: Color(0xFF6B7280),
             ),
           ),
 
@@ -2076,7 +2108,7 @@ class PolicySection extends StatelessWidget {
             text,
             style: const TextStyle(
               height: 1.5,
-              color: Color(0xFFBDBDBD),
+              color: Color(0xFF64748B),
             ),
           ),
         ],
@@ -2145,7 +2177,7 @@ class NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFF13181B),
+      color: const Color(0xFFFFFFFF),
       margin: const EdgeInsets.only(
         bottom: 12,
       ),
@@ -2154,10 +2186,10 @@ class NotificationTile extends StatelessWidget {
             const EdgeInsets.all(12),
         leading: CircleAvatar(
           backgroundColor:
-              const Color(0xFF252A1A),
+              const Color(0xFFEAF7EE),
           child: Icon(
             icon,
-            color: const Color(0xFFFFB600),
+            color: const Color(0xFF16A34A),
           ),
         ),
         title: Text(
