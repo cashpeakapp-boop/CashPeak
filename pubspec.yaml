@@ -13,3 +13,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/cashpeak_logo.png
+shared_preferences: ^2.5.3
