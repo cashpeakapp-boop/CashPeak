@@ -23,8 +23,8 @@ class _CashPeakAppState extends State<CashPeakApp> {
 
   static const Color green = Color(0xFF16A34A);
   static const Color darkGreen = Color(0xFF15803D);
-  static const Color lightGreen = Color(0xFFEAF7EE);
-  static const Color background = Color(0xFFF6F8F7);
+  static const Color lightGreen = Color(0xFFE7F7EC);
+  static const Color background = Color(0xFFF5F7F6);
   static const Color textDark = Color(0xFF111827);
   static const Color textGrey = Color(0xFF64748B);
 
@@ -36,6 +36,7 @@ class _CashPeakAppState extends State<CashPeakApp> {
       colorScheme: ColorScheme.fromSeed(
         seedColor: green,
         brightness: Brightness.light,
+        surface: Colors.white,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: background,
@@ -43,48 +44,23 @@ class _CashPeakAppState extends State<CashPeakApp> {
         elevation: 0,
         centerTitle: false,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: Colors.white,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-          side: const BorderSide(
-            color: Color(0xFFE5E7EB),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(18)),
+          side: BorderSide(color: Color(0xFFE2E8E5)),
         ),
       ),
-      navigationBarTheme: NavigationBarThemeData(
+      navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: Colors.white,
         elevation: 8,
         indicatorColor: lightGreen,
-        labelTextStyle: WidgetStateProperty.all(
-          const TextStyle(
+        labelTextStyle: WidgetStatePropertyAll(
+          TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: const Color(0xFFF8FAFC),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFFE2E8F0),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFFE2E8F0),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: green,
-            width: 1.5,
           ),
         ),
       ),
@@ -99,65 +75,28 @@ class _CashPeakAppState extends State<CashPeakApp> {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF0B1220),
+      scaffoldBackgroundColor: const Color(0xFF0F172A),
       colorScheme: ColorScheme.fromSeed(
         seedColor: green,
         brightness: Brightness.dark,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF0B1220),
+        backgroundColor: Color(0xFF0F172A),
         foregroundColor: Colors.white,
         elevation: 0,
-        centerTitle: false,
       ),
-      cardTheme: CardThemeData(
-        color: const Color(0xFF111827),
+      cardTheme: const CardThemeData(
+        color: Color(0xFF1E293B),
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-          side: const BorderSide(
-            color: Color(0xFF1F2937),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(18)),
+          side: BorderSide(color: Color(0xFF334155)),
         ),
       ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: const Color(0xFF111827),
-        elevation: 8,
-        indicatorColor: const Color(0xFF163B27),
-        labelTextStyle: WidgetStateProperty.all(
-          const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: const Color(0xFF172033),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFF293548),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: Color(0xFF293548),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: green,
-            width: 1.5,
-          ),
-        ),
-      ),
-      snackBarTheme: const SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: darkGreen,
+      navigationBarTheme: const NavigationBarThemeData(
+        backgroundColor: Color(0xFF1E293B),
+        indicatorColor: Color(0xFF14532D),
       ),
     );
   }
@@ -225,23 +164,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8FAF9),
       body: Center(
         child: Image.asset(
           'assets/cashpeak_logo.png',
-          width: 210,
+          width: 250,
           errorBuilder: (_, __, ___) {
-            return Container(
-              width: 110,
-              height: 110,
-              decoration: BoxDecoration(
-                color: const Color(0xFFEAF7EE),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: const Icon(
-                Icons.monetization_on_rounded,
-                size: 65,
-                color: Color(0xFF16A34A),
-              ),
+            return const Icon(
+              Icons.monetization_on,
+              size: 100,
+              color: Color(0xFF16A34A),
             );
           },
         ),
@@ -297,17 +229,17 @@ class _MainShellState extends State<MainShell> {
     const TransactionItem(
       title: 'Welcome Bonus',
       coins: 500,
-      icon: Icons.card_giftcard_rounded,
+      icon: Icons.card_giftcard,
     ),
     const TransactionItem(
       title: 'Daily Check-in',
       coins: 40,
-      icon: Icons.calendar_today_rounded,
+      icon: Icons.calendar_today,
     ),
     const TransactionItem(
       title: 'Video Reward',
       coins: 130,
-      icon: Icons.play_circle_rounded,
+      icon: Icons.play_circle,
     ),
   ];
 
@@ -353,7 +285,7 @@ class _MainShellState extends State<MainShell> {
         TransactionItem(
           title: 'Withdrawal Request',
           coins: -amount,
-          icon: Icons.arrow_upward_rounded,
+          icon: Icons.arrow_upward,
         ),
       );
     });
@@ -373,6 +305,14 @@ class _MainShellState extends State<MainShell> {
     });
 
     showMessage('Account details saved.');
+  }
+
+  void saveUpi(String value) {
+    setState(() {
+      upiId = value;
+    });
+
+    showMessage('UPI ID saved.');
   }
 
   void showMessage(String text) {
@@ -408,13 +348,7 @@ class _MainShellState extends State<MainShell> {
         upiId: upiId,
         themeMode: widget.themeMode,
         onSaveAccount: saveAccount,
-        onSaveUpi: (value) {
-          setState(() {
-            upiId = value;
-          });
-
-          showMessage('UPI ID saved.');
-        },
+        onSaveUpi: saveUpi,
         onThemeChanged: widget.onThemeChanged,
         onEarn: addCoins,
       ),
@@ -432,12 +366,12 @@ class _MainShellState extends State<MainShell> {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
+            selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
           NavigationDestination(
             icon: Icon(Icons.task_alt_outlined),
-            selectedIcon: Icon(Icons.task_alt_rounded),
+            selectedIcon: Icon(Icons.task_alt),
             label: 'Earn',
           ),
           NavigationDestination(
@@ -445,13 +379,13 @@ class _MainShellState extends State<MainShell> {
               Icons.account_balance_wallet_outlined,
             ),
             selectedIcon: Icon(
-              Icons.account_balance_wallet_rounded,
+              Icons.account_balance_wallet,
             ),
             label: 'Wallet',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
@@ -460,552 +394,6 @@ class _MainShellState extends State<MainShell> {
   }
 }
 
-// ============================================================
-// HOME PAGE
-// ============================================================
-
-class HomePage extends StatelessWidget {
-  final int coins;
-  final Function(int, String, IconData) onEarn;
-
-  const HomePage({
-    super.key,
-    required this.coins,
-    required this.onEarn,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final rupees = coins / 100;
-
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
-          18,
-          14,
-          18,
-          25,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // HEADER
-            Row(
-              children: [
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEAF7EE),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: Image.asset(
-                    'assets/cashpeak_logo.png',
-                    errorBuilder: (_, __, ___) {
-                      return const Icon(
-                        Icons.monetization_on_rounded,
-                        color: Color(0xFF16A34A),
-                        size: 34,
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'CashPeak',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        'Earn More. Reach The Peak.',
-                        style: TextStyle(
-                          color: Color(0xFF16A34A),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surface,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: Theme.of(context)
-                          .dividerColor,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              const NotificationsPage(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.notifications_none_rounded,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 22),
-
-            // BALANCE
-            BalanceCard(
-              coins: coins,
-              rupees: rupees,
-            ),
-
-            const SizedBox(height: 28),
-
-            const Text(
-              'Quick Actions',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-
-            const SizedBox(height: 14),
-
-            Row(
-              children: [
-                Expanded(
-                  child: ActionCard(
-                    icon: Icons.play_circle_outline_rounded,
-                    title: 'Watch & Earn',
-                    onTap: () {
-                      onEarn(
-                        130,
-                        'Video Reward',
-                        Icons.play_circle_rounded,
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ActionCard(
-                    icon: Icons.quiz_outlined,
-                    title: 'Quiz',
-                    onTap: () {
-                      onEarn(
-                        50,
-                        'Quiz Reward',
-                        Icons.quiz_rounded,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            ActionCard(
-              icon: Icons.calendar_today_outlined,
-              title: 'Daily Check-in',
-              fullWidth: true,
-              onTap: () {
-                onEarn(
-                  40,
-                  'Daily Check-in',
-                  Icons.calendar_today_rounded,
-                );
-              },
-            ),
-
-            const SizedBox(height: 28),
-
-            const Text(
-              'How Coins Work',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            const InfoCard(
-              icon: Icons.monetization_on_outlined,
-              text: '100 Coins = ₹1',
-            ),
-
-            const SizedBox(height: 10),
-
-            const InfoCard(
-              icon: Icons.account_balance_wallet_outlined,
-              text: 'Minimum withdrawal = ₹100',
-            ),
-
-            const SizedBox(height: 28),
-
-            const Text(
-              'Recent Activity',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            const ActivityTile(
-              icon: Icons.card_giftcard_rounded,
-              title: 'Welcome Bonus',
-              subtitle: '+500 Coins',
-            ),
-
-            const ActivityTile(
-              icon: Icons.calendar_today_rounded,
-              title: 'Daily Check-in',
-              subtitle: '+40 Coins',
-            ),
-
-            const ActivityTile(
-              icon: Icons.play_circle_rounded,
-              title: 'Video Reward',
-              subtitle: '+130 Coins',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// BALANCE CARD
-// ============================================================
-
-class BalanceCard extends StatelessWidget {
-  final int coins;
-  final double rupees;
-
-  const BalanceCard({
-    super.key,
-    required this.coins,
-    required this.rupees,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness ==
-        Brightness.dark;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: dark
-              ? const [
-                  Color(0xFF123D27),
-                  Color(0xFF0F2B20),
-                ]
-              : const [
-                  Color(0xFFE9F9EE),
-                  Color(0xFFDDF5E5),
-                ],
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: dark
-              ? const Color(0xFF24613F)
-              : const Color(0xFFB7DCC3),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(
-              dark ? 0.20 : 0.06,
-            ),
-            blurRadius: 22,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: dark
-                      ? const Color(0xFF1B5135)
-                      : Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(13),
-                ),
-                child: const Icon(
-                  Icons.account_balance_wallet_rounded,
-                  color: Color(0xFF16A34A),
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Your Balance',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          Text(
-            '$coins',
-            style: TextStyle(
-              fontSize: 38,
-              fontWeight: FontWeight.w900,
-              color: dark
-                  ? Colors.white
-                  : const Color(0xFF166534),
-              height: 1,
-            ),
-          ),
-
-          const SizedBox(height: 6),
-
-          Text(
-            'Coins',
-            style: TextStyle(
-              color: dark
-                  ? const Color(0xFFA7F3C0)
-                  : const Color(0xFF64748B),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-
-          const SizedBox(height: 15),
-
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
-            ),
-            decoration: BoxDecoration(
-              color: dark
-                  ? const Color(0xFF0B2A1C)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              '≈ ₹${rupees.toStringAsFixed(2)}',
-              style: const TextStyle(
-                color: Color(0xFF16A34A),
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ============================================================
-// ACTION CARD
-// ============================================================
-
-class ActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-  final bool fullWidth;
-
-  const ActionCard({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.onTap,
-    this.fullWidth = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(18),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Container(
-          width: fullWidth ? double.infinity : null,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 18,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: Theme.of(context).dividerColor,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEAF7EE),
-                  borderRadius:
-                      BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFF16A34A),
-                  size: 23,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Flexible(
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// INFO CARD
-// ============================================================
-
-class InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const InfoCard({
-    super.key,
-    required this.icon,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFFEAF7EE),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: const Color(0xFF16A34A),
-              size: 21,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ============================================================
-// ACTIVITY TILE
-// ============================================================
-
-class ActivityTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  const ActivityTile({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        radius: 22,
-        backgroundColor: const Color(0xFFEAF7EE),
-        child: Icon(
-          icon,
-          color: const Color(0xFF16A34A),
-        ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: const TextStyle(
-          color: Color(0xFF16A34A),
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
 // ============================================================
 // HOME PAGE
 // ============================================================
@@ -1047,7 +435,8 @@ class HomePage extends StatelessWidget {
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
                     children: [
                       Text(
                         'CashPeak',
@@ -1071,11 +460,14 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const NotificationsPage(),
+                        builder: (_) =>
+                            const NotificationsPage(),
                       ),
                     );
                   },
-                  icon: const Icon(Icons.notifications_none),
+                  icon: const Icon(
+                    Icons.notifications_none,
+                  ),
                 ),
               ],
             ),
@@ -1166,7 +558,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 10),
 
             const InfoCard(
-              icon: Icons.account_balance_wallet_outlined,
+              icon:
+                  Icons.account_balance_wallet_outlined,
               text: 'Minimum withdrawal = ₹100',
             ),
 
@@ -1245,7 +638,8 @@ class BalanceCard extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
           const Text(
             'Your Coins',
@@ -1272,10 +666,11 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '≈ ₹${rupees.toStringAsFixed(2)}',
+            '₹${rupees.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 18,
               color: Color(0xFF22C55E),
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -1305,11 +700,12 @@ class ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.white,
       elevation: 3,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
-        onTap: onTap,
         borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
         child: Container(
           width: fullWidth ? double.infinity : null,
           padding: const EdgeInsets.all(18),
@@ -1320,7 +716,8 @@ class ActionCard extends StatelessWidget {
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment:
+                MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
@@ -1365,12 +762,11 @@ class InfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         children: [
-          const SizedBox(width: 2),
           Icon(
             icon,
             color: const Color(0xFF16A34A),
@@ -1434,7 +830,8 @@ class EarnPage extends StatelessWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             const Text(
               'Earn Coins',
@@ -1443,23 +840,21 @@ class EarnPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 6),
-
             const Text(
               'Complete simple tasks and earn rewards.',
               style: TextStyle(
                 color: Color(0xFF6B7280),
               ),
             ),
-
             const SizedBox(height: 25),
 
             EarnTaskCard(
               icon: Icons.play_circle_outline,
               title: 'Watch Video',
               reward: '+130 Coins',
-              description: 'Watch a short video to earn coins.',
+              description:
+                  'Watch a short video to earn coins.',
               onTap: () {
                 onEarn(
                   130,
@@ -1475,7 +870,8 @@ class EarnPage extends StatelessWidget {
               icon: Icons.quiz_outlined,
               title: 'Complete Quiz',
               reward: '+50 Coins',
-              description: 'Answer a quick quiz and earn.',
+              description:
+                  'Answer a quick quiz and earn.',
               onTap: () {
                 onEarn(
                   50,
@@ -1491,7 +887,8 @@ class EarnPage extends StatelessWidget {
               icon: Icons.calendar_today_outlined,
               title: 'Daily Check-in',
               reward: '+40 Coins',
-              description: 'Check in once every day.',
+              description:
+                  'Check in once every day.',
               onTap: () {
                 onEarn(
                   40,
@@ -1507,7 +904,8 @@ class EarnPage extends StatelessWidget {
               icon: Icons.card_giftcard_outlined,
               title: 'Welcome Bonus',
               reward: '+500 Coins',
-              description: 'Your welcome reward.',
+              description:
+                  'Your welcome reward.',
               onTap: () {
                 onEarn(
                   500,
@@ -1523,7 +921,8 @@ class EarnPage extends StatelessWidget {
               icon: Icons.people_outline,
               title: 'Refer & Earn',
               reward: '+500 Coins',
-              description: 'Invite friends and earn rewards.',
+              description:
+                  'Invite friends and earn rewards.',
               onTap: () {
                 Navigator.push(
                   context,
@@ -1542,7 +941,8 @@ class EarnPage extends StatelessWidget {
               icon: Icons.casino_outlined,
               title: 'Spin & Earn',
               reward: 'Win up to 100 Coins',
-              description: 'Spin the reward wheel.',
+              description:
+                  'Spin the reward wheel.',
               onTap: () {
                 Navigator.push(
                   context,
@@ -1586,7 +986,7 @@ class EarnTaskCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: const Color(0xFFE2E8E5),
@@ -1599,7 +999,8 @@ class EarnTaskCard extends StatelessWidget {
             height: 52,
             decoration: BoxDecoration(
               color: const Color(0xFFF0FDF4),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius:
+                  BorderRadius.circular(14),
             ),
             child: Icon(
               icon,
@@ -1607,12 +1008,11 @@ class EarnTaskCard extends StatelessWidget {
               size: 28,
             ),
           ),
-
           const SizedBox(width: 14),
-
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -1640,13 +1040,12 @@ class EarnTaskCard extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(width: 8),
-
           ElevatedButton(
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF16A34A),
+              backgroundColor:
+                  const Color(0xFF16A34A),
               foregroundColor: Colors.white,
             ),
             child: const Text('Open'),
@@ -1656,6 +1055,7 @@ class EarnTaskCard extends StatelessWidget {
     );
   }
 }
+
 // ============================================================
 // WALLET PAGE
 // ============================================================
@@ -1699,7 +1099,10 @@ class WalletPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 final amount =
-                    int.tryParse(controller.text.trim()) ?? 0;
+                    int.tryParse(
+                          controller.text.trim(),
+                        ) ??
+                        0;
 
                 Navigator.pop(dialogContext);
                 onWithdraw(amount);
@@ -1722,7 +1125,8 @@ class WalletPage extends StatelessWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
             const Text(
               'Wallet',
@@ -1757,8 +1161,10 @@ class WalletPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF16A34A),
+                style:
+                    ElevatedButton.styleFrom(
+                  backgroundColor:
+                      const Color(0xFF16A34A),
                   foregroundColor: Colors.white,
                 ),
               ),
@@ -1789,7 +1195,9 @@ class WalletPage extends StatelessWidget {
             const SizedBox(height: 10),
 
             ...transactions.map(
-              (item) => TransactionTile(item: item),
+              (item) => TransactionTile(
+                item: item,
+              ),
             ),
           ],
         ),
@@ -1852,7 +1260,7 @@ class ProfilePage extends StatelessWidget {
   final ThemeMode themeMode;
 
   final Function(String, String) onSaveAccount;
-  final ValueChanged<ThemeMode> onSaveUpi;
+  final ValueChanged<String> onSaveUpi;
   final ValueChanged<ThemeMode> onThemeChanged;
 
   final Function(int, String, IconData) onEarn;
@@ -1914,7 +1322,8 @@ class ProfilePage extends StatelessWidget {
             ProfileOption(
               icon: Icons.person_outline,
               title: 'Account Details',
-              subtitle: 'Name and email information',
+              subtitle:
+                  'Name and email information',
               onTap: () {
                 showAccountDialog(context);
               },
@@ -1923,9 +1332,11 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 12),
 
             ProfileOption(
-              icon: Icons.account_balance_wallet_outlined,
+              icon:
+                  Icons.account_balance_wallet_outlined,
               title: 'UPI ID',
-              subtitle: upiId ?? 'Add your UPI ID',
+              subtitle:
+                  upiId ?? 'Add your UPI ID',
               onTap: () {
                 showUpiDialog(context);
               },
@@ -1936,7 +1347,8 @@ class ProfilePage extends StatelessWidget {
             ProfileOption(
               icon: Icons.people_outline,
               title: 'Refer & Earn',
-              subtitle: 'Invite friends and earn coins',
+              subtitle:
+                  'Invite friends and earn coins',
               onTap: () {
                 Navigator.push(
                   context,
@@ -1954,7 +1366,8 @@ class ProfilePage extends StatelessWidget {
             ProfileOption(
               icon: Icons.casino_outlined,
               title: 'Spin & Earn',
-              subtitle: 'Spin and win coins',
+              subtitle:
+                  'Spin and win coins',
               onTap: () {
                 Navigator.push(
                   context,
@@ -1979,7 +1392,8 @@ class ProfilePage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => ThemePage(
                       currentMode: themeMode,
-                      onThemeChanged: onThemeChanged,
+                      onThemeChanged:
+                          onThemeChanged,
                     ),
                   ),
                 );
@@ -2008,7 +1422,8 @@ class ProfilePage extends StatelessWidget {
             ProfileOption(
               icon: Icons.privacy_tip_outlined,
               title: 'Privacy Policy',
-              subtitle: 'Read CashPeak privacy policy',
+              subtitle:
+                  'Read CashPeak privacy policy',
               onTap: () {
                 Navigator.push(
                   context,
@@ -2031,7 +1446,8 @@ class ProfilePage extends StatelessWidget {
                   context: context,
                   applicationName: 'CashPeak',
                   applicationVersion: '1.0.0',
-                  applicationIcon: const Icon(
+                  applicationIcon:
+                      const Icon(
                     Icons.monetization_on,
                     color: Color(0xFF16A34A),
                   ),
@@ -2052,7 +1468,6 @@ class ProfilePage extends StatelessWidget {
   void showAccountDialog(BuildContext context) {
     final nameController =
         TextEditingController(text: userName);
-
     final emailController =
         TextEditingController(text: userEmail);
 
@@ -2066,23 +1481,27 @@ class ProfilePage extends StatelessWidget {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
+                  decoration:
+                      const InputDecoration(
                     labelText: 'Name',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
+                    prefixIcon:
+                        Icon(Icons.person),
+                    border:
+                        OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 14),
-
                 TextField(
                   controller: emailController,
                   keyboardType:
                       TextInputType.emailAddress,
-                  decoration: const InputDecoration(
+                  decoration:
+                      const InputDecoration(
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
+                    prefixIcon:
+                        Icon(Icons.email),
+                    border:
+                        OutlineInputBorder(),
                   ),
                 ),
               ],
@@ -2099,7 +1518,6 @@ class ProfilePage extends StatelessWidget {
               onPressed: () {
                 final name =
                     nameController.text.trim();
-
                 final email =
                     emailController.text.trim();
 
@@ -2107,7 +1525,10 @@ class ProfilePage extends StatelessWidget {
 
                 Navigator.pop(dialogContext);
 
-                onSaveAccount(name, email);
+                onSaveAccount(
+                  name,
+                  email,
+                );
               },
               child: const Text('Save'),
             ),
@@ -2122,7 +1543,9 @@ class ProfilePage extends StatelessWidget {
 
   void showUpiDialog(BuildContext context) {
     final controller =
-        TextEditingController(text: upiId ?? '');
+        TextEditingController(
+      text: upiId ?? '',
+    );
 
     showDialog(
       context: context,
@@ -2133,7 +1556,8 @@ class ProfilePage extends StatelessWidget {
             controller: controller,
             keyboardType:
                 TextInputType.emailAddress,
-            decoration: const InputDecoration(
+            decoration:
+                const InputDecoration(
               labelText: 'UPI ID',
               hintText: 'example@upi',
               prefixIcon: Icon(
@@ -2158,7 +1582,7 @@ class ProfilePage extends StatelessWidget {
 
                 Navigator.pop(dialogContext);
 
-                onSaveUpi(value as ThemeMode);
+                onSaveUpi(value);
               },
               child: const Text('Save UPI'),
             ),
@@ -2192,11 +1616,11 @@ class ProfileOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFFFFFFF),
       child: ListTile(
         onTap: onTap,
         leading: CircleAvatar(
-          backgroundColor: const Color(0xFFEAF7EE),
+          backgroundColor:
+              const Color(0xFFEAF7EE),
           child: Icon(
             icon,
             color: const Color(0xFF16A34A),
@@ -2216,6 +1640,394 @@ class ProfileOption extends StatelessWidget {
     );
   }
 }
+
+// ============================================================
+// REFER & EARN
+// ============================================================
+
+class ReferEarnPage extends StatelessWidget {
+  final Function(int, String, IconData) onEarn;
+
+  const ReferEarnPage({
+    super.key,
+    required this.onEarn,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Refer & Earn'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(22),
+        child: Column(
+          children: [
+            const SizedBox(height: 25),
+
+            const Icon(
+              Icons.people,
+              size: 90,
+              color: Color(0xFF16A34A),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              'Invite Friends',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            const Text(
+              'Invite your friends to CashPeak and earn bonus coins.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF6B7280),
+                fontSize: 15,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    BorderRadius.circular(18),
+                border: Border.all(
+                  color: const Color(0xFFE1E7E3),
+                ),
+              ),
+              child: const Column(
+                children: [
+                  Text(
+                    'Your Referral Code',
+                    style: TextStyle(
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'CASHPEAK100',
+                    style: TextStyle(
+                      color: Color(0xFF16A34A),
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  onEarn(
+                    500,
+                    'Referral Bonus',
+                    Icons.people,
+                  );
+
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        '+500 Referral Coins added!',
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.share),
+                label: const Text(
+                  'REFER & EARN 500 COINS',
+                ),
+                style:
+                    ElevatedButton.styleFrom(
+                  backgroundColor:
+                      const Color(0xFF16A34A),
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// SPIN & EARN
+// ============================================================
+
+class SpinEarnPage extends StatefulWidget {
+  final Function(int, String, IconData) onEarn;
+
+  const SpinEarnPage({
+    super.key,
+    required this.onEarn,
+  });
+
+  @override
+  State<SpinEarnPage> createState() =>
+      _SpinEarnPageState();
+}
+
+class _SpinEarnPageState
+    extends State<SpinEarnPage> {
+  final Random random = Random();
+
+  bool spinning = false;
+  int reward = 0;
+
+  Future<void> spin() async {
+    if (spinning) return;
+
+    setState(() {
+      spinning = true;
+    });
+
+    await Future.delayed(
+      const Duration(milliseconds: 1200),
+    );
+
+    final rewards = [
+      10,
+      20,
+      30,
+      50,
+      75,
+      100,
+    ];
+
+    final result =
+        rewards[random.nextInt(rewards.length)];
+
+    if (!mounted) return;
+
+    setState(() {
+      spinning = false;
+      reward = result;
+    });
+
+    widget.onEarn(
+      result,
+      'Spin & Earn',
+      Icons.casino,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Spin & Earn'),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            children: [
+              const Text(
+                'Spin & Earn',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              const Text(
+                'Spin the wheel and win coins.',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+
+              const SizedBox(height: 35),
+
+              AnimatedRotation(
+                turns: spinning ? 3 : 0,
+                duration:
+                    const Duration(
+                  milliseconds: 1200,
+                ),
+                curve: Curves.easeOut,
+                child: Container(
+                  width: 210,
+                  height: 210,
+                  decoration:
+                      const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: SweepGradient(
+                      colors: [
+                        Color(0xFF16A34A),
+                        Color(0xFF86EFAC),
+                        Color(0xFF15803D),
+                        Color(0xFF22C55E),
+                        Color(0xFF16A34A),
+                      ],
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.casino,
+                      size: 80,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              if (reward > 0)
+                Text(
+                  'You won $reward Coins!',
+                  style: const TextStyle(
+                    color: Color(0xFF16A34A),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+              const SizedBox(height: 25),
+
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton.icon(
+                  onPressed:
+                      spinning ? null : spin,
+                  icon: const Icon(
+                    Icons.casino,
+                  ),
+                  label: Text(
+                    spinning
+                        ? 'Spinning...'
+                        : 'SPIN NOW',
+                  ),
+                  style:
+                      ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xFF16A34A),
+                    foregroundColor:
+                        Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// THEME PAGE
+// ============================================================
+
+class ThemePage extends StatelessWidget {
+  final ThemeMode currentMode;
+  final ValueChanged<ThemeMode> onThemeChanged;
+
+  const ThemePage({
+    super.key,
+    required this.currentMode,
+    required this.onThemeChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Theme'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(18),
+        children: [
+          const Text(
+            'Choose App Theme',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          themeTile(
+            context,
+            'Dark Mode',
+            Icons.dark_mode_outlined,
+            ThemeMode.dark,
+          ),
+
+          themeTile(
+            context,
+            'Light Mode',
+            Icons.light_mode_outlined,
+            ThemeMode.light,
+          ),
+
+          themeTile(
+            context,
+            'System Default',
+            Icons.settings_brightness_outlined,
+            ThemeMode.system,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget themeTile(
+    BuildContext context,
+    String title,
+    IconData icon,
+    ThemeMode mode,
+  ) {
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor:
+              const Color(0xFFEAF7EE),
+          child: Icon(
+            icon,
+            color: const Color(0xFF16A34A),
+          ),
+        ),
+        title: Text(title),
+        trailing: Radio<ThemeMode>(
+          value: mode,
+          groupValue: currentMode,
+          onChanged: (value) {
+            if (value != null) {
+              onThemeChanged(value);
+            }
+          },
+        ),
+        onTap: () {
+          onThemeChanged(mode);
+        },
+      ),
+    );
+  }
+}
+
 // ============================================================
 // PRIVACY POLICY
 // ============================================================
@@ -2303,9 +2115,12 @@ class PolicySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 22),
+      padding: const EdgeInsets.only(
+        bottom: 22,
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
           Text(
             title,
@@ -2350,16 +2165,15 @@ class NotificationsPage extends StatelessWidget {
             message:
                 '500 Coins have been added to your account.',
           ),
-
           NotificationTile(
             icon: Icons.calendar_today,
             title: 'Daily Check-in',
             message:
                 'Complete your daily check-in and earn coins.',
           ),
-
           NotificationTile(
-            icon: Icons.account_balance_wallet,
+            icon:
+                Icons.account_balance_wallet,
             title: 'Withdrawal',
             message:
                 'Minimum withdrawal is 10,000 Coins.',
@@ -2389,12 +2203,15 @@ class NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFFFFFFF),
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(
+        bottom: 12,
+      ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding:
+            const EdgeInsets.all(12),
         leading: CircleAvatar(
-          backgroundColor: const Color(0xFFEAF7EE),
+          backgroundColor:
+              const Color(0xFFEAF7EE),
           child: Icon(
             icon,
             color: const Color(0xFF16A34A),
@@ -2407,7 +2224,8 @@ class NotificationTile extends StatelessWidget {
           ),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 5),
+          padding:
+              const EdgeInsets.only(top: 5),
           child: Text(message),
         ),
       ),
