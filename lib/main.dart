@@ -664,11 +664,7 @@ class ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: const Color(0xFFFFFFFF),
-      borderRadius: BorderRadius.circular(18),
-      boxShadow: const [BoxShadow(color: Color(0x10000000), blurRadius: 14, offset: Offset(0, 5))],
-      child: InkWell(
-        onTap: onTap,
+  elevation: 3,
         borderRadius: BorderRadius.circular(18),
         child: Container(
           width: fullWidth
