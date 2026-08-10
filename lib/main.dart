@@ -335,8 +335,10 @@ class _MainShellState extends State<MainShell> {
         onEarn: addCoins,
       ),
       EarnPage(
-        onEarn: addCoins,
-      ),
+  onEarn: addCoins,
+  onDailyCheckIn: dailyCheckIn,
+  dailyCheckInAvailable: dailyCheckInAvailable,
+),
       WalletPage(
         coins: coins,
         transactions: transactions,
