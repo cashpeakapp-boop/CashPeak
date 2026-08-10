@@ -976,7 +976,19 @@ class EarnPage extends StatelessWidget {
               reward: '+500 Coins',
               description:
                   'Your welcome reward.',
-              onTap: claimWelcomeBonus,
+              onTap: () {
+  if (welcomeBonusClaimed) {
+    showMessage('Welcome Bonus already claimed.');
+    return;
+  }
+
+  setState(() {
+    coins += 500;
+    welcomeBonusClaimed = true;
+  });
+
+  showMessage('Welcome Bonus claimed! +500 Coins');
+},
             ),
 
             const SizedBox(height: 14),
