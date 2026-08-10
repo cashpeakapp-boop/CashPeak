@@ -898,7 +898,11 @@ class EarnPage extends StatelessWidget {
               reward: '+50 Coins',
               description:
                   'Answer a quick quiz and earn.',
-              onTap: dailyCheckInAvailable ? onDailyCheckIn : null,
+              onTap: dailyCheckInAvailable
+    ? onDailyCheckIn
+    : () {
+        showMessage('Daily Check-in is available once every 24 hours.');
+      },
             ),
 
             const SizedBox(height: 14),
