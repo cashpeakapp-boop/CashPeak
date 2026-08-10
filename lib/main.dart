@@ -818,11 +818,14 @@ class ActivityTile extends StatelessWidget {
 
 class EarnPage extends StatelessWidget {
   final Function(int, String, IconData) onEarn;
-
+  final VoidCallback onDailyCheckIn;
+  final bool dailyCheckInAvailable;
   const EarnPage({
-    super.key,
-    required this.onEarn,
-  });
+  super.key,
+  required this.onEarn,
+  required this.onDailyCheckIn,
+  required this.dailyCheckInAvailable,
+});
 
   @override
   Widget build(BuildContext context) {
@@ -872,7 +875,7 @@ class EarnPage extends StatelessWidget {
               reward: '+50 Coins',
               description:
                   'Answer a quick quiz and earn.',
-              onTap: dailyCheckIn,
+              onTap: dailyCheckInAvailable ? onDailyCheckIn : null,
             ),
 
             const SizedBox(height: 14),
