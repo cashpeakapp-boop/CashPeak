@@ -224,7 +224,28 @@ class _MainShellState extends State<MainShell> {
   String userName = 'CashPeak User';
   String userEmail = '';
   String? upiId;
+  
+DateTime? lastDailyCheckIn;
 
+bool get dailyCheckInAvailable {
+  if (lastDailyCheckIn == null) return true;
+
+  return DateTime.now().difference(lastDailyCheckIn!).inHours >= 24;
+}
+
+void dailyCheckIn() {
+  if (!dailyCheckInAvailable) {
+    showMessage('Daily Check-in is available once every 24 hours.');
+    return;
+  }
+
+  setState(() {
+    coins += 40;
+    lastDailyCheckIn = DateTime.now();
+  });
+
+  showMessage('Daily Check-in complete! +40 Coins');
+}
   final List<TransactionItem> transactions = [
     const TransactionItem(
       title: 'Welcome Bonus',
