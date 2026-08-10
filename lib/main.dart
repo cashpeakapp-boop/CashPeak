@@ -887,11 +887,15 @@ class ActivityTile extends StatelessWidget {
 class EarnPage extends StatelessWidget {
   final Function(int, String, IconData) onEarn;
   final VoidCallback onDailyCheckIn;
+  final VoidCallback onCompleteQuiz;
+  final VoidCallback onClaimWelcomeBonus;
   final bool dailyCheckInAvailable;
   const EarnPage({
   super.key,
   required this.onEarn,
   required this.onDailyCheckIn,
+  required this.onCompleteQuiz,
+  required this.onClaimWelcomeBonus,
   required this.dailyCheckInAvailable,
 });
 
@@ -943,13 +947,7 @@ class EarnPage extends StatelessWidget {
               reward: '+50 Coins',
               description:
                   'Answer a quick quiz and earn.',
-              onTap: () {
-  onEarn(
-    50,
-    'Complete Quiz',
-    Icons.quiz_outlined,
-  );
-},
+              onTap: onCompleteQuiz,
             ),
 
             const SizedBox(height: 14),
@@ -960,13 +958,7 @@ class EarnPage extends StatelessWidget {
               reward: '+40 Coins',
               description:
                   'Check in once every day.',
-              onTap: () {
-  onEarn(
-    40,
-    'Daily Check-in',
-    Icons.calendar_today,
-  );
-},
+              onTap: onDailyCheckIn,
             ),
             const SizedBox(height: 14),
 
@@ -976,19 +968,7 @@ class EarnPage extends StatelessWidget {
               reward: '+500 Coins',
               description:
                   'Your welcome reward.',
-              onTap: () {
-  if (welcomeBonusClaimed) {
-    showMessage('Welcome Bonus already claimed.');
-    return;
-  }
-
-  setState(() {
-    coins += 500;
-    welcomeBonusClaimed = true;
-  });
-
-  showMessage('Welcome Bonus claimed! +500 Coins');
-},
+              onTap: onClaimWelcomeBonus,
             ),
 
             const SizedBox(height: 14),
@@ -1025,6 +1005,8 @@ class EarnPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => SpinEarnPage(
                       onEarn: onEarn,
+  
+),
                     ),
                   ),
                 );
