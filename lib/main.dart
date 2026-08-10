@@ -872,13 +872,7 @@ class EarnPage extends StatelessWidget {
               reward: '+50 Coins',
               description:
                   'Answer a quick quiz and earn.',
-              onTap: () {
-                onEarn(
-                  50,
-                  'Quiz Reward',
-                  Icons.quiz,
-                );
-              },
+              onTap: dailyCheckIn,
             ),
 
             const SizedBox(height: 14),
