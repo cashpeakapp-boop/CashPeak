@@ -226,6 +226,10 @@ class _MainShellState extends State<MainShell> {
   String? upiId;
   
 DateTime? lastDailyCheckIn;
+  bool welcomeBonusClaimed = false;
+int videoCountToday = 0;
+int quizCountToday = 0;
+int spinCountToday = 0;
 
 bool get dailyCheckInAvailable {
   if (lastDailyCheckIn == null) return true;
@@ -245,6 +249,47 @@ void dailyCheckIn() {
   });
 
   showMessage('Daily Check-in complete! +40 Coins');
+}
+  void completeQuiz() {
+  if (quizCountToday >= 1) {
+    showMessage('Daily Quiz already completed today.');
+    return;
+  }
+
+  setState(() {
+    coins += 50;
+    quizCountToday++;
+  });
+
+  showMessage('Quiz completed! +50 Coins');
+}
+
+void watchVideo() {
+  if (videoCountToday >= 1) {
+    showMessage('Video reward already claimed today.');
+    return;
+  }
+
+  setState(() {
+    coins += 130;
+    videoCountToday++;
+  });
+
+  showMessage('Video completed! +130 Coins');
+}
+
+void claimWelcomeBonus() {
+  if (welcomeBonusClaimed) {
+    showMessage('Welcome Bonus has already been claimed.');
+    return;
+  }
+
+  setState(() {
+    coins += 500;
+    welcomeBonusClaimed = true;
+  });
+
+  showMessage('Welcome Bonus claimed! +500 Coins');
 }
   final List<TransactionItem> transactions = [
     const TransactionItem(
@@ -898,7 +943,7 @@ class EarnPage extends StatelessWidget {
               reward: '+50 Coins',
               description:
                   'Answer a quick quiz and earn.',
-              onTap: onDailyCheckIn,
+              onTap: completeQuiz,
             ),
 
             const SizedBox(height: 14),
@@ -909,15 +954,8 @@ class EarnPage extends StatelessWidget {
               reward: '+40 Coins',
               description:
                   'Check in once every day.',
-              onTap: () {
-                onEarn(
-                  40,
-                  'Daily Check-in',
-                  Icons.calendar_today,
-                );
-              },
+              onTap: dailyCheckIn,
             ),
-
             const SizedBox(height: 14),
 
             EarnTaskCard(
@@ -926,13 +964,7 @@ class EarnPage extends StatelessWidget {
               reward: '+500 Coins',
               description:
                   'Your welcome reward.',
-              onTap: () {
-                onEarn(
-                  500,
-                  'Welcome Bonus',
-                  Icons.card_giftcard,
-                );
-              },
+              onTap: claimWelcomeBonus,
             ),
 
             const SizedBox(height: 14),
