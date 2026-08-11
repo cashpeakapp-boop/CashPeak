@@ -401,7 +401,7 @@ void claimWelcomeBonus() {
         onEarn: addCoins,
       ),
       EarnPage(
-  onEarn: onEarn,
+  onEarn: addCoins,
   onCompleteQuiz: completeQuiz,
   onDailyCheckIn: dailyCheckIn,
   onClaimWelcomeBonus: claimWelcomeBonus,
@@ -1009,7 +1009,6 @@ class EarnPage extends StatelessWidget {
                       onEarn: onEarn,
   
 ),
-                    ),
                   ),
                 );
               },
