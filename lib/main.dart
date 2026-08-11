@@ -25,87 +25,6 @@ class CashPeakApp extends StatefulWidget {
 class _CashPeakAppState extends State<CashPeakApp> {
   ThemeMode themeMode = ThemeMode.light;
 
-  RewardedAd? _rewardedAd;
-bool _isRewardedAdLoading = false;
-
-int _rewardedAdsToday = 0;
-
-static const int maxRewardedAdsPerDay = 6;
-
-static const String rewardedAdUnitId =
-    'ca-app-pub-3940256099942544/5224354917';
-
-void loadRewardedAd() {
-  if (_isRewardedAdLoading || _rewardedAd != null) {
-    return;
-  }
-
-  _isRewardedAdLoading = true;
-
-  RewardedAd.load(
-    adUnitId: rewardedAdUnitId,
-    request: const AdRequest(),
-    rewardedAdLoadCallback: RewardedAdLoadCallback(
-      onAdLoaded: (RewardedAd ad) {
-        _isRewardedAdLoading = false;
-        _rewardedAd = ad;
-
-        if (mounted) {
-          setState(() {});
-        }
-      },
-      onAdFailedToLoad: (LoadAdError error) {
-        _isRewardedAdLoading = false;
-        _rewardedAd = null;
-
-        debugPrint('Rewarded ad failed: $error');
-
-        if (mounted) {
-          setState(() {});
-        }
-      },
-    ),
-  );
-}
-
-void showRewardedAd() {
-  if (_rewardedAdsToday >= maxRewardedAdsPerDay) {
-    showMessage('Aaj ke 6 rewarded ads complete ho gaye.');
-    return;
-  }
-
-  final RewardedAd? ad = _rewardedAd;
-
-  if (ad == null) {
-    showMessage('Ad abhi ready nahi hai. Thodi der baad try karein.');
-    loadRewardedAd();
-    return;
-  }
-
-  _rewardedAd = null;
-
-  ad.fullScreenContentCallback = FullScreenContentCallback(
-    onAdDismissedFullScreenContent: (Ad ad) {
-      ad.dispose();
-      loadRewardedAd();
-    },
-    onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
-      ad.dispose();
-      loadRewardedAd();
-    },
-  );
-
-  ad.show(
-    onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      _rewardedAdsToday++;
-
-      // User ko 130 coins yahan milenge
-      addCoins(130);
-
-      showMessage('🎉 +130 Coins earned!');
-    },
-  );
-}
   static const Color green = Color(0xFF16A34A);
   static const Color darkGreen = Color(0xFF15803D);
   static const Color lightGreen = Color(0xFFE7F7EC);
@@ -302,6 +221,105 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
+  RewardedAd? _rewardedAd;
+  bool _isRewardedAdLoading = false;
+  int _rewardedAdsToday = 0;
+
+  static const int maxRewardedAdsPerDay = 6;
+
+  // Google test rewarded-ad unit ID.
+  // Replace with your real AdMob rewarded ID before release.
+  static const String rewardedAdUnitId =
+      'ca-app-pub-3940256099942544/5224354917';
+
+  @override
+  void initState() {
+    super.initState();
+    loadRewardedAd();
+  }
+
+  void loadRewardedAd() {
+    if (_isRewardedAdLoading || _rewardedAd != null) {
+      return;
+    }
+
+    _isRewardedAdLoading = true;
+
+    RewardedAd.load(
+      adUnitId: rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          _isRewardedAdLoading = false;
+          _rewardedAd = ad;
+
+          if (mounted) {
+            setState(() {});
+          }
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _isRewardedAdLoading = false;
+          _rewardedAd = null;
+
+          debugPrint('Rewarded ad failed: $error');
+
+          if (mounted) {
+            setState(() {});
+          }
+        },
+      ),
+    );
+  }
+
+  void showRewardedAd() {
+    if (_rewardedAdsToday >= maxRewardedAdsPerDay) {
+      showMessage('Aaj ke 6 rewarded ads complete ho gaye.');
+      return;
+    }
+
+    final RewardedAd? ad = _rewardedAd;
+
+    if (ad == null) {
+      showMessage(
+        'Ad abhi ready nahi hai. Thodi der baad try karein.',
+      );
+      loadRewardedAd();
+      return;
+    }
+
+    _rewardedAd = null;
+
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (Ad ad) {
+        ad.dispose();
+        loadRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
+        ad.dispose();
+        loadRewardedAd();
+      },
+    );
+
+    ad.show(
+      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        _rewardedAdsToday++;
+
+        // Rewarded ad complete hone par 130 Coins.
+        addCoins(
+          130,
+          'Video Reward',
+          Icons.play_circle,
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _rewardedAd?.dispose();
+    super.dispose();
+  }
+
   int currentIndex = 0;
 
   int coins = 1250;
