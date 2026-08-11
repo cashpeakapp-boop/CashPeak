@@ -397,9 +397,11 @@ void claimWelcomeBonus() {
   Widget build(BuildContext context) {
     final pages = [
       HomePage(
-        coins: coins,
-        onEarn: addCoins,
-      ),
+  coins: coins,
+  onWatchVideo: watchVideo,
+  onCompleteQuiz: completeQuiz,
+  onDailyCheckIn: dailyCheckIn,
+),
       EarnPage(
   onEarn: addCoins,
   onCompleteQuiz: completeQuiz,
@@ -1860,7 +1862,7 @@ class _SpinEarnPageState extends State<SpinEarnPage>
     40,
     50,
     75,
-    100,
+    15,
     20,
   ];
 
