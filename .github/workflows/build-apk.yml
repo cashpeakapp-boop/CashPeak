@@ -30,9 +30,24 @@ jobs:
       - name: Set Android minimum SDK
         run: sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 23/' android/app/build.gradle.kts
         
-      - name: Add AdMob Ad ID
+      - name: Add AdMob App ID
         run: |
-          sed -i '/<application/i\        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3600725386955734~3134884048"/>' android/app/src/main/AndroidManifest.xml
+              python3 - <<'PY'
+              from pathlib import Path
+
+              p = Path("android/app/src/main/AndroidManifest.xml")
+              s = p.read_text()
+
+              meta = '        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3600725386955734~3134884048"/>'
+
+          if "com.google.android.gms.ads.APPLICATION_ID" not in s:
+              s = s.replace("<application", "<application\n" + meta, 1)
+
+              p.write_text(s)
+              PY
+
+              echo "Checking AdMob App ID:"
+              grep -n "APPLICATION_ID" android/app/src/main/AndroidManifest.xml
           
       - name: Remove default Flutter test
         run: rm -rf test
