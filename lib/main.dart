@@ -402,7 +402,6 @@ void claimWelcomeBonus() {
     final pages = [
       HomePage(
   coins: coins,
-  onWatchVideo: watchVideo,
   onCompleteQuiz: completeQuiz,
   onDailyCheckIn: dailyCheckIn,
 ),
