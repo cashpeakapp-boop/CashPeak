@@ -402,6 +402,7 @@ void claimWelcomeBonus() {
     final pages = [
       HomePage(
   coins: coins,
+  onEarn: addCoins,
 ),
       EarnPage(
   onEarn: addCoins,
