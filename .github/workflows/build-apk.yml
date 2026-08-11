@@ -25,30 +25,29 @@ jobs:
         run: flutter doctor -v
 
       - name: Create Android project files
-        run: flutter create . --platforms=android
+        run:  flutter create . --platforms=android
 
-      - name: Add AdMob App ID
+            - name: Add AdMob App ID
         run: |
-              python3 - <<'PY'
-              from pathlib import Path
+          python3 - <<'PY'
+          from pathlib import Path
 
-              manifest = Path("android/app/src/main/AndroidManifest.xml")
-              text = manifest.read_text()
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          text = manifest.read_text()
 
-              admob_meta = '''
-              <meta-data
-               android:name="com.google.android.gms.ads.APPLICATION_ID"
-               android:value="ca-app-pub-3600725386955734~313484048"/>
-               '''
+          admob_meta = '''        <meta-data
+              android:name="com.google.android.gms.ads.APPLICATION_ID"
+              android:value="ca-app-pub-3600725386955734~313484048"/>'''
 
-               text = text.replace(
-              '<application',
-              '<application' + admob_meta,
-                1
-               )
+          if "com.google.android.gms.ads.APPLICATION_ID" not in text:
+              text = text.replace(
+                  "<application",
+                  "<application\n" + admob_meta,
+                  1
+              )
 
-               manifest.write_text(text)
-               PY
+          manifest.write_text(text)
+          PY
       - name: Remove default Flutter test
         run: rm -rf test
   
