@@ -25,6 +25,87 @@ class CashPeakApp extends StatefulWidget {
 class _CashPeakAppState extends State<CashPeakApp> {
   ThemeMode themeMode = ThemeMode.light;
 
+  RewardedAd? _rewardedAd;
+bool _isRewardedAdLoading = false;
+
+int _rewardedAdsToday = 0;
+
+static const int maxRewardedAdsPerDay = 6;
+
+static const String rewardedAdUnitId =
+    'ca-app-pub-3940256099942544/5224354917';
+
+void loadRewardedAd() {
+  if (_isRewardedAdLoading || _rewardedAd != null) {
+    return;
+  }
+
+  _isRewardedAdLoading = true;
+
+  RewardedAd.load(
+    adUnitId: rewardedAdUnitId,
+    request: const AdRequest(),
+    rewardedAdLoadCallback: RewardedAdLoadCallback(
+      onAdLoaded: (RewardedAd ad) {
+        _isRewardedAdLoading = false;
+        _rewardedAd = ad;
+
+        if (mounted) {
+          setState(() {});
+        }
+      },
+      onAdFailedToLoad: (LoadAdError error) {
+        _isRewardedAdLoading = false;
+        _rewardedAd = null;
+
+        debugPrint('Rewarded ad failed: $error');
+
+        if (mounted) {
+          setState(() {});
+        }
+      },
+    ),
+  );
+}
+
+void showRewardedAd() {
+  if (_rewardedAdsToday >= maxRewardedAdsPerDay) {
+    showMessage('Aaj ke 6 rewarded ads complete ho gaye.');
+    return;
+  }
+
+  final RewardedAd? ad = _rewardedAd;
+
+  if (ad == null) {
+    showMessage('Ad abhi ready nahi hai. Thodi der baad try karein.');
+    loadRewardedAd();
+    return;
+  }
+
+  _rewardedAd = null;
+
+  ad.fullScreenContentCallback = FullScreenContentCallback(
+    onAdDismissedFullScreenContent: (Ad ad) {
+      ad.dispose();
+      loadRewardedAd();
+    },
+    onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
+      ad.dispose();
+      loadRewardedAd();
+    },
+  );
+
+  ad.show(
+    onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+      _rewardedAdsToday++;
+
+      // User ko 130 coins yahan milenge
+      addCoins(130);
+
+      showMessage('🎉 +130 Coins earned!');
+    },
+  );
+}
   static const Color green = Color(0xFF16A34A);
   static const Color darkGreen = Color(0xFF15803D);
   static const Color lightGreen = Color(0xFFE7F7EC);
@@ -406,6 +487,7 @@ void claimWelcomeBonus() {
 ),
       EarnPage(
   onEarn: addCoins,
+  onWatchAd: showRewardedAd,
   onCompleteQuiz: completeQuiz,
   onDailyCheckIn: dailyCheckIn,
   onClaimWelcomeBonus: claimWelcomeBonus,
@@ -895,10 +977,12 @@ class EarnPage extends StatelessWidget {
   final VoidCallback onDailyCheckIn;
   final VoidCallback onCompleteQuiz;
   final VoidCallback onClaimWelcomeBonus;
+  final VoidCallback onWatchAd;
   final bool dailyCheckInAvailable;
   const EarnPage({
   super.key,
   required this.onEarn,
+  required this.onWatchAd,
   required this.onDailyCheckIn,
   required this.onCompleteQuiz,
   required this.onClaimWelcomeBonus,
@@ -936,13 +1020,7 @@ class EarnPage extends StatelessWidget {
               reward: '+130 Coins',
               description:
                   'Watch a short video to earn coins.',
-              onTap: () {
-                onEarn(
-                  130,
-                  'Video Reward',
-                  Icons.play_circle,
-                );
-              },
+              onTap: onWatchAd,
             ),
 
             const SizedBox(height: 14),
