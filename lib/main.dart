@@ -401,8 +401,10 @@ void claimWelcomeBonus() {
         onEarn: addCoins,
       ),
       EarnPage(
-  onEarn: addCoins,
+  onEarn: onEarn,
+  onCompleteQuiz: completeQuiz,
   onDailyCheckIn: dailyCheckIn,
+  onClaimWelcomeBonus: claimWelcomeBonus,
   dailyCheckInAvailable: dailyCheckInAvailable,
 ),
       WalletPage(
