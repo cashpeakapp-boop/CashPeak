@@ -25,7 +25,7 @@ jobs:
         run: flutter doctor -v
 
       - name: Create Android project files
-        run:  flutter create . --platforms=androi
+        run: flutter create .
         
       - name: Add AdMob App ID
         run: |
