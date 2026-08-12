@@ -270,46 +270,60 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
-  void showRewardedAd() {
+  Future<bool> showRewardedAd({
+    required int rewardAmount,
+    required String rewardTitle,
+    required IconData rewardIcon,
+    VoidCallback? onRewardEarned,
+  }) async {
     if (_rewardedAdsToday >= maxRewardedAdsPerDay) {
       showMessage('Aaj ke 6 rewarded ads complete ho gaye.');
-      return;
+      return false;
     }
 
     final RewardedAd? ad = _rewardedAd;
 
     if (ad == null) {
-      showMessage(
-        'Ad abhi ready nahi hai. Thodi der baad try karein.',
-      );
+      showMessage('Ad abhi ready nahi hai. Thodi der baad try karein.');
       loadRewardedAd();
-      return;
+      return false;
     }
 
     _rewardedAd = null;
+    final completer = Completer<bool>();
 
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (Ad ad) {
         ad.dispose();
         loadRewardedAd();
+        if (!completer.isCompleted) completer.complete(false);
       },
       onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
         ad.dispose();
         loadRewardedAd();
+        if (!completer.isCompleted) completer.complete(false);
       },
     );
 
     ad.show(
       onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
         _rewardedAdsToday++;
-
-        // Rewarded ad complete hone par 130 Coins.
-        addCoins(
-          130,
-          'Video Reward',
-          Icons.play_circle,
-        );
+        if (rewardAmount > 0) {
+          addCoins(rewardAmount, rewardTitle, rewardIcon);
+        }
+        onRewardEarned?.call();
+        if (!completer.isCompleted) completer.complete(true);
       },
+    );
+
+    return completer.future;
+  }
+
+  Future<bool> showAdOnly() {
+    return showRewardedAd(
+      rewardAmount: 0,
+      rewardTitle: 'Ad View',
+      rewardIcon: Icons.ondemand_video,
     );
   }
 
@@ -345,25 +359,34 @@ void dailyCheckIn() {
     return;
   }
 
-  setState(() {
-    coins += 40;
-    lastDailyCheckIn = DateTime.now();
-  });
-
-  showMessage('Daily Check-in complete! +40 Coins');
+  showRewardedAd(
+    rewardAmount: 40,
+    rewardTitle: 'Daily Check-in',
+    rewardIcon: Icons.calendar_today,
+    onRewardEarned: () {
+      setState(() {
+        lastDailyCheckIn = DateTime.now();
+      });
+    },
+  );
 }
-  void completeQuiz() {
+
+void completeQuiz() {
   if (quizCountToday >= 1) {
     showMessage('Daily Quiz already completed today.');
     return;
   }
 
-  setState(() {
-    coins += 50;
-    quizCountToday++;
-  });
-
-  showMessage('Quiz completed! +50 Coins');
+  showRewardedAd(
+    rewardAmount: 50,
+    rewardTitle: 'Quiz Reward',
+    rewardIcon: Icons.quiz,
+    onRewardEarned: () {
+      setState(() {
+        quizCountToday++;
+      });
+    },
+  );
 }
 
 void watchVideo() {
@@ -372,12 +395,16 @@ void watchVideo() {
     return;
   }
 
-  setState(() {
-    coins += 130;
-    videoCountToday++;
-  });
-
-  showMessage('Video completed! +130 Coins');
+  showRewardedAd(
+    rewardAmount: 130,
+    rewardTitle: 'Video Reward',
+    rewardIcon: Icons.play_circle,
+    onRewardEarned: () {
+      setState(() {
+        videoCountToday++;
+      });
+    },
+  );
 }
 
 void claimWelcomeBonus() {
@@ -386,12 +413,16 @@ void claimWelcomeBonus() {
     return;
   }
 
-  setState(() {
-    coins += 500;
-    welcomeBonusClaimed = true;
-  });
-
-  showMessage('Welcome Bonus claimed! +500 Coins');
+  showRewardedAd(
+    rewardAmount: 500,
+    rewardTitle: 'Welcome Bonus',
+    rewardIcon: Icons.card_giftcard,
+    onRewardEarned: () {
+      setState(() {
+        welcomeBonusClaimed = true;
+      });
+    },
+  );
 }
   final List<TransactionItem> transactions = [
     const TransactionItem(
@@ -500,11 +531,14 @@ void claimWelcomeBonus() {
     final pages = [
       HomePage(
   coins: coins,
-  onEarn: addCoins,
+  onWatchAd: watchVideo,
+  onCompleteQuiz: completeQuiz,
+  onDailyCheckIn: dailyCheckIn,
 ),
       EarnPage(
   onEarn: addCoins,
-  onWatchAd: showRewardedAd,
+  onWatchAd: watchVideo,
+  onAdOnly: showAdOnly,
   onCompleteQuiz: completeQuiz,
   onDailyCheckIn: dailyCheckIn,
   onClaimWelcomeBonus: claimWelcomeBonus,
@@ -573,12 +607,16 @@ void claimWelcomeBonus() {
 
 class HomePage extends StatelessWidget {
   final int coins;
-  final Function(int, String, IconData) onEarn;
+  final VoidCallback onWatchAd;
+  final VoidCallback onCompleteQuiz;
+  final VoidCallback onDailyCheckIn;
 
   const HomePage({
     super.key,
     required this.coins,
-    required this.onEarn,
+    required this.onWatchAd,
+    required this.onCompleteQuiz,
+    required this.onDailyCheckIn,
   });
 
   @override
@@ -670,13 +708,7 @@ class HomePage extends StatelessWidget {
                   child: ActionCard(
                     icon: Icons.play_circle_outline,
                     title: 'Watch & Earn',
-                    onTap: () {
-                      onEarn(
-                        130,
-                        'Video Reward',
-                        Icons.play_circle,
-                      );
-                    },
+                    onTap: onWatchAd,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -684,13 +716,7 @@ class HomePage extends StatelessWidget {
                   child: ActionCard(
                     icon: Icons.quiz_outlined,
                     title: 'Quiz',
-                    onTap: () {
-                      onEarn(
-                        50,
-                        'Quiz Reward',
-                        Icons.quiz,
-                      );
-                    },
+                    onTap: onCompleteQuiz,
                   ),
                 ),
               ],
@@ -702,13 +728,7 @@ class HomePage extends StatelessWidget {
               icon: Icons.calendar_today_outlined,
               title: 'Daily Check-in',
               fullWidth: true,
-              onTap: () {
-                onEarn(
-                  40,
-                  'Daily Check-in',
-                  Icons.calendar_today,
-                );
-              },
+              onTap: onDailyCheckIn,
             ),
 
             const SizedBox(height: 28),
@@ -995,11 +1015,13 @@ class EarnPage extends StatelessWidget {
   final VoidCallback onCompleteQuiz;
   final VoidCallback onClaimWelcomeBonus;
   final VoidCallback onWatchAd;
+  final Future<bool> Function() onAdOnly;
   final bool dailyCheckInAvailable;
   const EarnPage({
   super.key,
   required this.onEarn,
   required this.onWatchAd,
+  required this.onAdOnly,
   required this.onDailyCheckIn,
   required this.onCompleteQuiz,
   required this.onClaimWelcomeBonus,
@@ -1086,6 +1108,7 @@ class EarnPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => ReferEarnPage(
                       onEarn: onEarn,
+                      onWatchAd: onAdOnly,
                     ),
                   ),
                 );
@@ -1106,8 +1129,8 @@ class EarnPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => SpinEarnPage(
                       onEarn: onEarn,
-  
-),
+                      onWatchAd: onAdOnly,
+                    ),
                   ),
                 );
               },
@@ -1890,7 +1913,12 @@ class ReferEarnPage extends StatelessWidget {
               width: double.infinity,
               height: 54,
               child: ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
+                  if (onWatchAd != null) {
+                    final watched = await onWatchAd!();
+                    if (!watched || !context.mounted) return;
+                  }
+
                   onEarn(
                     500,
                     'Referral Bonus',
@@ -1981,6 +2009,11 @@ class _SpinEarnPageState extends State<SpinEarnPage>
 
   Future<void> spin() async {
     if (spinning) return;
+
+    if (widget.onWatchAd != null) {
+      final watched = await widget.onWatchAd!();
+      if (!watched || !mounted) return;
+    }
 
     setState(() {
       spinning = true;
