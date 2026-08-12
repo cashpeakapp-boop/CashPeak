@@ -32,7 +32,43 @@ jobs:
 
       - name: Add AdMob App ID
         run: |
-          sed -i '/<application[^>]*>/a\        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3600725386955734~3134884048"/>' android/app/src/main/AndroidManifest.xml
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          text = manifest.read_text()
+
+          app_id = "ca-app-pub-3600725386955734~3134884048"
+
+          meta = (
+              '        <meta-data '
+              'android:name="com.google.android.gms.ads.APPLICATION_ID" '
+              f'android:value="{app_id}"/>'
+          )
+
+          if "com.google.android.gms.ads.APPLICATION_ID" in text:
+              text = re.sub(
+                  r'<meta-data\s+android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"[^>]*/>',
+                  meta,
+                  text
+              )
+          else:
+              text = re.sub(
+                  r'(<application\b[^>]*>)',
+                  r'\1\n' + meta,
+                  text,
+                  count=1
+              )
+
+          manifest.write_text(text)
+          print("AdMob App ID added successfully.")
+          PY
+
+      - name: Verify AdMob App ID
+        run: |
+          grep -n "com.google.android.gms.ads.APPLICATION_ID" \
+            android/app/src/main/AndroidManifest.xml
 
       - name: Remove default Flutter test
         run: rm -rf test
