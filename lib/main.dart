@@ -230,7 +230,7 @@ class _MainShellState extends State<MainShell> {
   // Google test rewarded-ad unit ID.
   // Replace with your real AdMob rewarded ID before release.
  static const String rewardedAdUnitId =
-    'ca-app-pub-3940256099942544/5224354917';
+    'ca-app-pub-3600725386955734/3516660441';
   @override
   void initState() {
     super.initState();
@@ -372,20 +372,29 @@ void dailyCheckIn() {
 }
 
 void completeQuiz() {
-  if (quizCountToday >= 1) {
-    showMessage('Daily Quiz already completed today.');
+  if (quizCountToday >= 4) {
+    showMessage('Aaj ke 4 quizzes complete ho gaye.');
     return;
   }
 
-  showRewardedAd(
-    rewardAmount: 50,
-    rewardTitle: 'Quiz Reward',
-    rewardIcon: Icons.quiz,
-    onRewardEarned: () {
-      setState(() {
-        quizCountToday++;
-      });
-    },
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => QuizPage(
+        completedToday: quizCountToday,
+        onQuizReward: () {
+          setState(() {
+            quizCountToday++;
+          });
+        },
+        onWatchAd: () {
+          return showRewardedAd(
+            rewardAmount: 50,
+            rewardTitle: 'Quiz Reward',
+            rewardIcon: Icons.quiz,
+          );
+        },
+      ),
+    ),
   );
 }
 
@@ -1136,6 +1145,192 @@ class EarnPage extends StatelessWidget {
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// DAILY QUIZ PAGE
+// ============================================================
+
+class QuizQuestion {
+  final String question;
+  final List<String> options;
+  final int answerIndex;
+
+  const QuizQuestion({
+    required this.question,
+    required this.options,
+    required this.answerIndex,
+  });
+}
+
+class QuizPage extends StatefulWidget {
+  final int completedToday;
+  final VoidCallback onQuizReward;
+  final Future<bool> Function() onWatchAd;
+
+  const QuizPage({
+    super.key,
+    required this.completedToday,
+    required this.onQuizReward,
+    required this.onWatchAd,
+  });
+
+  @override
+  State<QuizPage> createState() => _QuizPageState();
+}
+
+class _QuizPageState extends State<QuizPage> {
+  static const List<QuizQuestion> questions = [
+    QuizQuestion(
+      question: 'India ki capital kya hai?',
+      options: ['Mumbai', 'New Delhi', 'Kolkata', 'Jaipur'],
+      answerIndex: 1,
+    ),
+    QuizQuestion(
+      question: '2 + 2 kitna hota hai?',
+      options: ['3', '4', '5', '6'],
+      answerIndex: 1,
+    ),
+    QuizQuestion(
+      question: 'Suraj kis direction se nikalta hai?',
+      options: ['West', 'North', 'East', 'South'],
+      answerIndex: 2,
+    ),
+    QuizQuestion(
+      question: 'Ek week me kitne din hote hain?',
+      options: ['5', '6', '7', '8'],
+      answerIndex: 2,
+    ),
+  ];
+
+  late int currentQuestion;
+  final Set<int> completed = {};
+  bool processing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    currentQuestion = widget.completedToday.clamp(0, 3);
+  }
+
+  Future<void> answer(int selected) async {
+    if (processing || completed.contains(currentQuestion)) return;
+
+    final q = questions[currentQuestion];
+    if (selected != q.answerIndex) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Wrong answer. Try again.')),
+      );
+      return;
+    }
+
+    setState(() => processing = true);
+    final watched = await widget.onWatchAd();
+
+    if (!mounted) return;
+
+    if (watched) {
+      widget.onQuizReward();
+      setState(() {
+        completed.add(currentQuestion);
+        processing = false;
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+        }
+      });
+
+      if (currentQuestion >= questions.length - 1 &&
+          completed.length >= questions.length) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Aaj ke 4 quizzes complete! +200 Coins')),
+        );
+      }
+    } else {
+      setState(() => processing = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final done = completed.length >= questions.length;
+    final q = questions[currentQuestion];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Daily Quiz')),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: done
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.emoji_events, size: 80, color: Color(0xFF16A34A)),
+                      SizedBox(height: 16),
+                      Text(
+                        'Aaj ke 4 quizzes complete!',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 8),
+                      Text('+200 Coins earned'),
+                    ],
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Quiz ${currentQuestion + 1} of 4',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF16A34A),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    LinearProgressIndicator(
+                      value: (currentQuestion + 1) / 4,
+                      minHeight: 8,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    const SizedBox(height: 28),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          q.question,
+                          style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    ...List.generate(q.options.length, (i) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: processing ? null : () => answer(i),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              child: Text(q.options[i]),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                    const Spacer(),
+                    const Text(
+                      'Correct answer ke baad rewarded ad dekho aur +50 Coins pao.',
+                      style: TextStyle(color: Color(0xFF64748B)),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
