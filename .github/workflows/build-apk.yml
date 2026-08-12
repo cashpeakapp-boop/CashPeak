@@ -25,7 +25,7 @@ jobs:
         run: flutter doctor -v
 
       - name: Create Android project files
-        run: flutter create .
+        run: flutter create --org com.cashpeak .
 
       - name: Set Android minimum SDK
         run: |
@@ -65,6 +65,11 @@ jobs:
 
           manifest.write_text(text)
           print("AdMob App ID added successfully.")
+          PY
+
+      - name: Verify Android Package ID
+        run: |
+          grep -R "com.cashpeak.cashpeak" android/app/build.gradle.kts android/app/src/main/AndroidManifest.xml || true
 
       - name: Verify AdMob App ID
         run: |
