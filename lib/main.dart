@@ -1828,10 +1828,12 @@ class ProfileOption extends StatelessWidget {
 
 class ReferEarnPage extends StatelessWidget {
   final Function(int, String, IconData) onEarn;
+  final Future<bool> Function()? onWatchAd;
 
   const ReferEarnPage({
     super.key,
     required this.onEarn,
+    this.onWatchAd,
   });
 
   @override
@@ -1959,10 +1961,12 @@ class ReferEarnPage extends StatelessWidget {
 
 class SpinEarnPage extends StatefulWidget {
   final Function(int, String, IconData) onEarn;
+  final Future<bool> Function()? onWatchAd;
 
   const SpinEarnPage({
     super.key,
     required this.onEarn,
+    this.onWatchAd,
   });
 
   @override
