@@ -229,8 +229,8 @@ class _MainShellState extends State<MainShell> {
 
   // Google test rewarded-ad unit ID.
   // Replace with your real AdMob rewarded ID before release.
-  static const String rewardedAdUnitId =
-    'ca-app-pub-3600725386955734/3516660441';
+ static const String rewardedAdUnitId =
+    'ca-app-pub-3940256099942544/5224354917';
   @override
   void initState() {
     super.initState();
