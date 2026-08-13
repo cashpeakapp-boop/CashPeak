@@ -24,12 +24,83 @@ jobs:
       - name: Flutter Doctor
         run: flutter doctor -v
 
-      - name: Create Android project files
-        run: flutter create --org com.cashpeak .
+      - name: Create Android project
+        run: flutter create .
 
-      - name: Set Android minimum SDK
+      - name: Copy Firebase configuration
         run: |
-          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 23/' android/app/build.gradle.kts
+          mkdir -p android/app
+          cp "google-services.json" android/app/google-services.json
+
+      - name: Configure Android Gradle
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path("android/settings.gradle.kts")
+          text = root.read_text()
+
+          if 'com.google.gms.google-services' not in text:
+              text = text.replace(
+                  'plugins {',
+                  'plugins {\n    id("com.google.gms.google-services") version "4.4.2" apply false',
+                  1
+              )
+              root.write_text(text)
+
+          app = Path("android/app/build.gradle.kts")
+          text = app.read_text()
+
+          if 'com.google.gms.google-services' not in text:
+              text = text.replace(
+                  'plugins {',
+                  'plugins {\n    id("com.google.gms.google-services")',
+                  1
+              )
+
+          text = text.replace(
+              'minSdk = flutter.minSdkVersion',
+              'minSdk = 23'
+          )
+
+          app.write_text(text)
+
+          print("Android Gradle configured.")
+
+      - name: Add Firebase dependencies
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          pubspec = Path("pubspec.yaml")
+          text = pubspec.read_text()
+
+          additions = {
+              "firebase_core": "^4.0.0",
+              "firebase_auth": "^6.0.0",
+              "cloud_firestore": "^6.0.0",
+              "google_sign_in": "^7.1.1",
+          }
+
+          if "dependencies:" not in text:
+              raise SystemExit("dependencies section not found")
+
+          lines = text.splitlines()
+          output = []
+          inserted = False
+
+          for line in lines:
+              output.append(line)
+
+              if line.strip() == "dependencies:" and not inserted:
+                  for name, version in additions.items():
+                      output.append(f"  {name}: {version}")
+                  inserted = True
+
+          pubspec.write_text("\n".join(output) + "\n")
+
+          print("Firebase dependencies added.")
+          PY
 
       - name: Add AdMob App ID
         run: |
@@ -48,13 +119,10 @@ jobs:
               f'android:value="{app_id}"/>'
           )
 
-          if "com.google.android.gms.ads.APPLICATION_ID" in text:
-              text = re.sub(
-                  r'<meta-data[^>]*android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"[^>]*/>',
-                  meta,
-                  text,
-                  count=1
-              )
+          pattern = r'<meta-data[^>]*android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"[^>]*/>'
+
+          if re.search(pattern, text):
+              text = re.sub(pattern, meta, text, count=1)
           else:
               text = re.sub(
                   r'(<application\b[^>]*>)',
@@ -64,12 +132,14 @@ jobs:
               )
 
           manifest.write_text(text)
-          print("AdMob App ID added successfully.")
+
+          print("AdMob App ID added.")
           PY
 
-      - name: Verify Android Package ID
+      - name: Verify Firebase configuration
         run: |
-          grep -R "com.cashpeak.cashpeak" android/app/build.gradle.kts android/app/src/main/AndroidManifest.xml || true
+          test -f android/app/google-services.json
+          echo "Firebase configuration found."
 
       - name: Verify AdMob App ID
         run: |
