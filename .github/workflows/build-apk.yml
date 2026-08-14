@@ -27,18 +27,62 @@ jobs:
       - name: Create Android project
         run: flutter create .
 
+      - name: Configure Android package and NDK
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          app = Path("android/app/build.gradle.kts")
+          text = app.read_text()
+
+          # Firebase package name
+          text = re.sub(
+              r'namespace\s*=\s*"[^"]*"',
+              'namespace = "com.cashpeak.cashpeak"',
+              text
+          )
+
+          # Android application ID
+          text = re.sub(
+              r'applicationId\s*=\s*"[^"]*"',
+              'applicationId = "com.cashpeak.cashpeak"',
+              text
+          )
+
+          # Required NDK version
+          text = re.sub(
+              r'ndkVersion\s*=\s*flutter\.ndkVersion',
+              'ndkVersion = "27.0.12077973"',
+              text
+          )
+
+          # Minimum Android SDK
+          text = re.sub(
+              r'minSdk\s*=\s*flutter\.minSdkVersion',
+              'minSdk = 23',
+              text
+          )
+
+          app.write_text(text)
+
+          print("Package: com.cashpeak.cashpeak")
+          print("NDK: 27.0.12077973")
+          print("Min SDK: 23")
+          PY
+
       - name: Copy Firebase configuration
         run: |
           mkdir -p android/app
-          cp "google-services.json" android/app/google-services.json
+          cp google-services.json android/app/google-services.json
 
-      - name: Configure Android Gradle
+      - name: Configure Google Services
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          root = Path("android/settings.gradle.kts")
-          text = root.read_text()
+          settings = Path("android/settings.gradle.kts")
+          text = settings.read_text()
 
           if 'com.google.gms.google-services' not in text:
               text = text.replace(
@@ -46,60 +90,22 @@ jobs:
                   'plugins {\n    id("com.google.gms.google-services") version "4.4.2" apply false',
                   1
               )
-              root.write_text(text)
+
+          settings.write_text(text)
 
           app = Path("android/app/build.gradle.kts")
           text = app.read_text()
 
-          if 'com.google.gms.google-services' not in text:
+          if 'id("com.google.gms.google-services")' not in text:
               text = text.replace(
                   'plugins {',
                   'plugins {\n    id("com.google.gms.google-services")',
                   1
               )
 
-          text = text.replace(
-              'minSdk = flutter.minSdkVersion',
-              'minSdk = 23'
-          )
-
           app.write_text(text)
 
-          print("Android Gradle configured.")
-
-      - name: Add Firebase dependencies
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          pubspec = Path("pubspec.yaml")
-          text = pubspec.read_text()
-
-          additions = {
-              "firebase_core": "^4.0.0",
-              "firebase_auth": "^6.0.0",
-              "cloud_firestore": "^6.0.0",
-              "google_sign_in": "^7.1.1",
-          }
-
-          if "dependencies:" not in text:
-              raise SystemExit("dependencies section not found")
-
-          lines = text.splitlines()
-          output = []
-          inserted = False
-
-          for line in lines:
-              output.append(line)
-
-              if line.strip() == "dependencies:" and not inserted:
-                  for name, version in additions.items():
-                      output.append(f"  {name}: {version}")
-                  inserted = True
-
-          pubspec.write_text("\n".join(output) + "\n")
-
-          print("Firebase dependencies added.")
+          print("Google Services configured.")
           PY
 
       - name: Add AdMob App ID
@@ -119,7 +125,11 @@ jobs:
               f'android:value="{app_id}"/>'
           )
 
-          pattern = r'<meta-data[^>]*android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"[^>]*/>'
+          pattern = (
+              r'<meta-data[^>]*'
+              r'android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"'
+              r'[^>]*/>'
+          )
 
           if re.search(pattern, text):
               text = re.sub(pattern, meta, text, count=1)
@@ -136,10 +146,15 @@ jobs:
           print("AdMob App ID added.")
           PY
 
-      - name: Verify Firebase configuration
+      - name: Verify Firebase package
         run: |
+          echo "Checking Firebase configuration..."
+          grep -n "com.cashpeak.cashpeak" \
+            android/app/build.gradle.kts
+
           test -f android/app/google-services.json
-          echo "Firebase configuration found."
+
+          echo "Firebase configuration OK."
 
       - name: Verify AdMob App ID
         run: |
@@ -148,6 +163,39 @@ jobs:
 
       - name: Remove default Flutter test
         run: rm -rf test
+
+      - name: Add Firebase dependencies
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          pubspec = Path("pubspec.yaml")
+          text = pubspec.read_text()
+
+          additions = [
+              "  firebase_core: ^4.0.0",
+              "  firebase_auth: ^6.0.0",
+              "  cloud_firestore: ^6.0.0",
+              "  google_sign_in: ^7.1.1",
+          ]
+
+          if "firebase_core:" not in text:
+              lines = text.splitlines()
+              output = []
+              inserted = False
+
+              for line in lines:
+                  output.append(line)
+
+                  if line.strip() == "dependencies:" and not inserted:
+                      output.extend(additions)
+                      inserted = True
+
+              text = "\n".join(output) + "\n"
+              pubspec.write_text(text)
+
+          print("Firebase dependencies configured.")
+          PY
 
       - name: Get Dependencies
         run: flutter pub get
